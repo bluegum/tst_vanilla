@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
    }
    setbuf(stdout, 0);
    /* populate tst */
-   //tst = insert(0, "laser", NULL);
    tst = tst_init();
    while ((i = getc(fp)) != EOF) 
    {
@@ -38,11 +37,44 @@ int main(int argc, char *argv[])
    insert(tst, t, NULL);
    /* examine tst */
    traverse(tst);
+   /* insertion */
+   tst = insert(tst, "laser", NULL);
+   tst = insert(tst, "lasec", NULL);
+   /* search */
    p = search(tst, "laser");
    if (p)
    {
       printf("found %s\n", "laser");
    }
+   else
+   {
+      printf("not found %s\n", "laser");
+   }
+   /* deletion */
+   tst_delete(tst, "laser");
+   tst_delete(tst, "lasec");
+   p = search(tst, "laser");
+   if (p)
+   {
+      printf("found %s\n", "laser");
+   }
+   else
+   {
+      printf("not found %s\n", "laser");
+   }
+   p = search(tst, "lasec");
+   if (p)
+   {
+      printf("found %s\n", "lasec");
+   }
+   else
+   {
+      printf("not found %s\n", "lasec");
+   }
+   tst_delete(tst, "lax");
+   p = search(tst, "laxative");
+   p = search(tst, "lax");
+   /* remove */
    cleanup(tst);
    return 0;
 }

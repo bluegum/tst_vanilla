@@ -76,6 +76,94 @@ int rsearch(Tptr p, char *s)
    }
 }
 
+void * tst_delete(Tptr p, char *s)
+{
+   Tptr last_p = p;
+   void * val= 0;
+   char *last_s = s;
+
+   if (!s)
+   {
+      return NULL;
+   }
+   while (p)
+   {
+      if (*s == p->splitchar)
+      {
+	 if (*s++ == 0)
+	 {
+	    val = (void*)(p->eqkid);
+	    break;
+	 }
+	 p = p->eqkid;
+      }
+      else
+      {
+	 last_s = s;
+	 if (*s < p->splitchar)
+	    p = p->lokid;
+	 else
+	    p = p->hikid;
+	 if (p->lokid || p->hikid)
+	 {
+	    last_p = p;
+	 }
+      }
+   }
+   if (last_p && p) /* the node holds common prefix */
+   {
+      if (last_p->splitchar == *last_s)
+      {
+	 if (last_p->eqkid)
+	 {
+	    if (last_p->eqkid->hikid)
+	    {
+	       last_p->eqkid = last_p->eqkid->hikid;
+	    }
+	    else
+	    {
+	       last_p->eqkid = NULL;
+	    }
+	 }
+      }
+      else if (last_p->hikid)
+      {
+	 if (last_p->hikid->splitchar == *last_s)
+	 {
+	    last_p->hikid = NULL;
+	 }
+	 else if ((last_p->lokid) && (last_p->lokid->splitchar == *last_s))
+	 {
+	    last_p->lokid = 0;
+	 }
+	 else if (last_p->eqkid)
+	 {
+	    goto eqkid;
+	 }
+      }
+      else if (last_p->lokid)
+      {
+	 if (last_p->lokid->splitchar == *last_s)
+	 {
+	    last_p->lokid = NULL;
+	 }
+      }
+      else if (last_p->eqkid)
+      {
+	 Tptr tt;
+	eqkid:
+	 tt = last_p->eqkid;
+	 if (tt->splitchar == 0)
+	 {
+	    if (tt->hikid && tt->hikid->splitchar == *last_s)
+	    {
+	       tt->hikid = NULL;
+	    }
+	 }
+      }
+   }
+   return val;
+}
 #if 0
 void pmsearch(Tptr p, char *s)
 {   if (!p) return;
