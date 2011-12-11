@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include "tst.h"
 
+static void
+print_key (char *k, void* val)
+{
+   printf("%s\n", k);
+}
+
 int main(int argc, char *argv[])
 {
    int	i;
@@ -36,7 +42,7 @@ int main(int argc, char *argv[])
    *s++ = 0;
    tst_insert(tst, t, NULL);
    /* examine tst */
-   tst_traverse(tst);
+   tst_traverse(tst, print_key);
    /* insertion */
    tst = tst_insert(tst, "laser", NULL);
    tst = tst_insert(tst, "lasec", NULL);

@@ -204,23 +204,23 @@ void nearsearch(Tptr p, char *s, int d)
 
 static char frame[1024];
 static char *f = frame;
-void tst_traverse(Tptr p)
+void tst_traverse(Tptr p, tst_hook callback)
 {
    if (!p) {return;}
-   tst_traverse(p->lokid);
+   tst_traverse(p->lokid, callback);
    if (p->splitchar)
    {
       *f++ = p->splitchar;
-      tst_traverse(p->eqkid);
+      tst_traverse(p->eqkid, callback);
       f--;
    }
    else
    {
       char *t = frame;
-      for (; t<f; t++) printf("%c", *t);
-      printf("%s", "\n");
+      *f = 0;
+      callback(t, p->eqkid);
    }
-   tst_traverse(p->hikid);
+   tst_traverse(p->hikid, callback);
 }
 
 Tptr tst_init()
