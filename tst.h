@@ -1,4 +1,6 @@
 /* TERNARY SEARCH TREE ALGS */
+#ifndef TST_H
+#define TST_H
 
 typedef struct tnode *Tptr;
 
@@ -12,3 +14,5 @@ extern void tst_cleanup(Tptr p);
 extern Tptr tst_init();
 extern int tst_attach(Tptr, void *val);
 extern void* tst_retrieve(Tptr);
+
+#endif
