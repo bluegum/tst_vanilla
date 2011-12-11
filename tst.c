@@ -8,7 +8,7 @@ typedef struct tnode {
 } Tnode;
 
 
-Tptr insert(Tptr p, char *s, void *val)
+Tptr tst_insert(Tptr p, char *s, void *val)
 {
    if (p == 0) {
       p = (Tptr) malloc(sizeof(Tnode));
@@ -25,28 +25,28 @@ Tptr insert(Tptr p, char *s, void *val)
 	 return p;
    }
    if (*s < p->splitchar)
-      p->lokid = insert(p->lokid, s, val);
+      p->lokid = tst_insert(p->lokid, s, val);
    else if (*s == p->splitchar) {
       if (*s == 0)
 	 p->eqkid = (Tptr)val;
       else
-	 p->eqkid = insert(p->eqkid, ++s, val);
+	 p->eqkid = tst_insert(p->eqkid, ++s, val);
    } else
-      p->hikid = insert(p->hikid, s, val);
+      p->hikid = tst_insert(p->hikid, s, val);
    return p;
 }
 
-void cleanup(Tptr p)
+void tst_cleanup(Tptr p)
 {   if (p) {
-      cleanup(p->lokid);
-      if (p->splitchar) cleanup(p->eqkid);
-      cleanup(p->hikid);
+      tst_cleanup(p->lokid);
+      if (p->splitchar) tst_cleanup(p->eqkid);
+      tst_cleanup(p->hikid);
       free(p);
    }
 }
 
 /* iterative search */
-Tptr search(Tptr root, char *s)
+Tptr tst_search(Tptr root, char *s)
 {
    Tptr p;
    p = root;
@@ -64,15 +64,15 @@ Tptr search(Tptr root, char *s)
 }
 
 /* recursive search */
-int rsearch(Tptr p, char *s)
+int tst_rsearch(Tptr p, char *s)
 {   if (!p) return 0;
    if (*s < p->splitchar)
-      return rsearch(p->lokid, s);
+      return tst_rsearch(p->lokid, s);
    else if (*s > p->splitchar)
-      return rsearch(p->hikid, s);
+      return tst_rsearch(p->hikid, s);
    else {
       if (*s == 0) return 1;
-      return rsearch(p->eqkid, ++s);
+      return tst_rsearch(p->eqkid, ++s);
    }
 }
 
@@ -118,10 +118,13 @@ void * tst_delete(Tptr p, char *s)
 	 {
 	    if (last_p->eqkid->hikid)
 	    {
+	       Tptr tt = last_p->eqkid;
 	       last_p->eqkid = last_p->eqkid->hikid;
+	       free(tt);
 	    }
 	    else
 	    {
+	       tst_cleanup(last_p->eqkid);
 	       last_p->eqkid = NULL;
 	    }
 	 }
@@ -130,11 +133,13 @@ void * tst_delete(Tptr p, char *s)
       {
 	 if (last_p->hikid->splitchar == *last_s)
 	 {
+	    tst_cleanup(last_p->hikid);
 	    last_p->hikid = NULL;
 	 }
 	 else if ((last_p->lokid) && (last_p->lokid->splitchar == *last_s))
 	 {
-	    last_p->lokid = 0;
+	    tst_cleanup(last_p->lokid);
+	    last_p->lokid = NULL;
 	 }
 	 else if (last_p->eqkid)
 	 {
@@ -145,6 +150,7 @@ void * tst_delete(Tptr p, char *s)
       {
 	 if (last_p->lokid->splitchar == *last_s)
 	 {
+	    tst_cleanup(last_p->lokid);
 	    last_p->lokid = NULL;
 	 }
       }
@@ -157,6 +163,7 @@ void * tst_delete(Tptr p, char *s)
 	 {
 	    if (tt->hikid && tt->hikid->splitchar == *last_s)
 	    {
+	       tst_cleanup(tt->hikid);
 	       tt->hikid = NULL;
 	    }
 	 }
@@ -197,14 +204,14 @@ void nearsearch(Tptr p, char *s, int d)
 
 static char frame[1024];
 static char *f = frame;
-void traverse(Tptr p)
+void tst_traverse(Tptr p)
 {
    if (!p) {return;}
-   traverse(p->lokid);
+   tst_traverse(p->lokid);
    if (p->splitchar)
    {
       *f++ = p->splitchar;
-      traverse(p->eqkid);
+      tst_traverse(p->eqkid);
       f--;
    }
    else
@@ -213,12 +220,12 @@ void traverse(Tptr p)
       for (; t<f; t++) printf("%c", *t);
       printf("%s", "\n");
    }
-   traverse(p->hikid);
+   tst_traverse(p->hikid);
 }
 
 Tptr tst_init()
 {
-   return  insert(0, 0, 0);
+   return  tst_insert(0, 0, 0);
 }
 int tst_attach(Tptr p, void *val)
 {

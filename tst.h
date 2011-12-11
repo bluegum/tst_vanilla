@@ -2,11 +2,11 @@
 
 typedef struct tnode *Tptr;
 
-extern Tptr insert(Tptr p, char *s, void *val);
-extern Tptr search(Tptr p, char *s);
-extern int rsearch(Tptr p, char *s);
+extern Tptr tst_insert(Tptr p, char *s, void *val);
+extern Tptr tst_search(Tptr p, char *s);
+extern int tst_rsearch(Tptr p, char *s);
 extern void * tst_delete(Tptr p, char *s);
-extern void cleanup(Tptr p);
+extern void tst_cleanup(Tptr p);
 
 /* user data */
 extern Tptr tst_init();

@@ -28,20 +28,20 @@ int main(int argc, char *argv[])
    {
       if (i == '\n') {
 	 *s++ = 0;
-	 insert(tst, t, NULL);
+	 tst_insert(tst, t, NULL);
 	 s = t;
       } else
 	 *s++ = i;
    }
    *s++ = 0;
-   insert(tst, t, NULL);
+   tst_insert(tst, t, NULL);
    /* examine tst */
-   traverse(tst);
+   tst_traverse(tst);
    /* insertion */
-   tst = insert(tst, "laser", NULL);
-   tst = insert(tst, "lasec", NULL);
+   tst = tst_insert(tst, "laser", NULL);
+   tst = tst_insert(tst, "lasec", NULL);
    /* search */
-   p = search(tst, "laser");
+   p = tst_search(tst, "laser");
    if (p)
    {
       printf("found %s\n", "laser");
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
    /* deletion */
    tst_delete(tst, "laser");
    tst_delete(tst, "lasec");
-   p = search(tst, "laser");
+   p = tst_search(tst, "laser");
    if (p)
    {
       printf("found %s\n", "laser");
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
    {
       printf("not found %s\n", "laser");
    }
-   p = search(tst, "lasec");
+   p = tst_search(tst, "lasec");
    if (p)
    {
       printf("found %s\n", "lasec");
@@ -72,9 +72,18 @@ int main(int argc, char *argv[])
       printf("not found %s\n", "lasec");
    }
    tst_delete(tst, "lax");
-   p = search(tst, "laxative");
-   p = search(tst, "lax");
+   p = tst_search(tst, "laxative");
+   p = tst_search(tst, "lax");
+   /* data functions */
+   {
+     void *d;
+     p = tst_insert(tst, "mydata", (void*) 0xff);
+     p = tst_search(tst, "mydata");
+     d = tst_retrieve(p);
+     tst_attach(p, (void*)0xffff);
+     d = tst_retrieve(p);
+   }
    /* remove */
-   cleanup(tst);
+   tst_cleanup(tst);
    return 0;
 }
