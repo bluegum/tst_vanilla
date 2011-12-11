@@ -1,0 +1,11 @@
+A trimmed version of Bentley & Sedgewick's
+TERNARY SEARCH TREE
+
+This code is based on tstdemo.c by Bentley & Sedgewick.
+There is no optimization done to the algorith. It is
+a pure vanilla version of the original file suitable
+for further adaptation and integration to projects.
+
+links:
+http://drdobbs.com/database/184410528?pgno=1
+http://www.cs.princeton.edu/~rs/strings/
